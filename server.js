@@ -59,10 +59,11 @@ app.get('/weather', (req, res) => {
 function searchWeather() {
   const weatherData = require('./data/darksky.json');
   const weatherDataDaily = weatherData.daily.data; // is an array
-  const weatherArray = [];
-  for (let i = 0; i < weatherDataDaily.length; i++) {
-    weatherArray.push(new Weather(weatherDataDaily[i]));
-  }
+
+  const weatherArray = weatherDataDaily.map((value) => {
+    return new Weather(value);
+  });
+
   return weatherArray;
 }
 
