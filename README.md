@@ -60,7 +60,7 @@ Number and name of feature: Data Formatting
 
 Estimate of time needed to complete: 30 minutes
 
-Start time: _____
+Start time: 9:30am
 
 Finish time: _____
 
