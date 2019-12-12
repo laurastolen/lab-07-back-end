@@ -26,6 +26,7 @@ In order to run this app, a user needs to have node.js installed. Required libra
 <!-- Give credit (and a link) to other people or resources that helped you build this application. -->
 
 ## time estimates
+### day one
 Number and name of feature: Repo set up
 
 Estimate of time needed to complete: 30 minutes
@@ -55,22 +56,22 @@ Start time: 11:40
 Finish time: 1:15
 
 Actual time needed to complete: 1.5 hours
-
+### day two
 Number and name of feature: Data Formatting
 
 Estimate of time needed to complete: 30 minutes
 
 Start time: 9:30am
 
-Finish time: _____
+Finish time: 10:10
 
-Actual time needed to complete: _____
+Actual time needed to complete: 40 minutes
 
 Number and name of feature: Locations
 
 Estimate of time needed to complete: 1 hour
 
-Start time: _____
+Start time: 10:10
 
 Finish time: _____
 
