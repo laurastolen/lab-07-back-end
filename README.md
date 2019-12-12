@@ -52,7 +52,7 @@ Number and name of feature: Weather (show weather info about a location)
 Estimate of time needed to complete: 1.5 hours
 
 Start time: 11:40
-
+......
 Finish time: 1:15
 
 Actual time needed to complete: 1.5 hours
