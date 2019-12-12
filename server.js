@@ -19,76 +19,53 @@ app.listen(PORT, () => console.log(`listening on port ${PORT}!`));
 
 
 // ----------------ROUTES-------------------
-// making location route:
-app.get('/location', (req, res) => {
-  try {
-    // get the city name they entered
-    const city = req.query.data;
-    // make locationObj which is returned to front end, and which includes the city name, lat/long, and formatted address
-    searchLatToLong(city, res);
-    // res.send(locationObj);
-    // console.log(locationObj);
-  }
-  catch (error) {
-    console.error(error);
 
-    Response.status(500).send('oh nooooo something went wrong!');
-  }
-});
+// define location route------------------------------
+app.get('/location', locationHandler);
 
-function searchLatToLong(city, response) {
-  // get the json data (from file at this point, eventually from API)
-  // const geoData = require('./data/geo.json');
-
-  let url = `https://maps.googleapis.com/maps/api/geocode/json?address=${city}&key=${process.env.GEOCODE_API_KEY}`
+// locationHandler, which contains the superagent.get, which contains .then and .catch. The .then uses the constructor to create location instances
+function locationHandler(req, res) {
+  let url = `https://maps.googleapis.com/maps/api/geocode/json?address=${req.query.data}&key=${process.env.GEOCODE_API_KEY}`;
   superagent.get(url)
-    .then(results => {
-      // console.log(results.body.geometry)
-      const locationObj = new Location(city, results.body);
-
-      response.send(locationObj);
+    .then(data => {
+      const geoData = data.body;
+      const locationObj = new Location(req.query.data, geoData);
+      res.send(locationObj);
+    })
+    .catch((error) => {
+      res.status(500).send(error);
     });
-
-
-  // const geoDataResults = geoData.results[0];
-
 }
 
 // the constructor that takes in the selected part of the served results, and creates a formatted object instance
-function Location(city, results) {
+function Location(city, geoData) {
   // eslint-disable-next-line camelcase
   this.search_query = city;
   // eslint-disable-next-line camelcase
-  this.formatted_query = results.body.results[0].formatted_address;
-  this.latitude = results.body.results.geometry.location.lat;
-  this.longitude = results.body.results.geometry.location.lng;
+  this.formatted_query = geoData.results[0].formatted_address;
+  this.latitude = geoData.results[0].geometry.location.lat;
+  this.longitude = geoData.results[0].geometry.location.lng;
 }
 
 
-// weather route
-app.get('/weather', (req, res) => {
-  // get the weather data (from local file, eventually API) and format via constructor to return to front end
-  const forecastObj = searchWeather();
-  res.send(forecastObj);
-  console.log(forecastObj);
-});
+// define weather route--------------------------------
+app.get('/weather', weatherHandler);
 
-// fx to get the data, make instances via constructor, and return formatted info for front end
-function searchWeather() {
-  const weatherData = require('./data/darksky.json');
-  const weatherDataDaily = weatherData.daily.data; // is an array
+// weatherHandler, which contains the superagent.get, which contains .then and .catch. The .then uses the constructor to create location instances
+function weatherHandler(req, res) {
+  let url = `https://api.darksky.net/forecast/${process.env.WEATHER_API_KEY}/${req.query.data.latitude},${req.query.data.longitude}`;
+  superagent.get(url)
+    .then(data => {
+      const weatherData = data.body.daily.data.map((value) => new Weather(value.summary, value.time));
+      res.send(weatherData);
+    });
 
-  const weatherArray = weatherDataDaily.map((value) => {
-    return new Weather(value);
-  });
-
-  return weatherArray;
 }
 
 // constructor to format the served data for our front-end
-function Weather(weatherData) {
-  this.time = weatherData.time;
-  this.forecast = weatherData.summary;
+function Weather(forecast, time) {
+  this.time = new Date(time * 1000).toDateString();
+  this.forecast = forecast;
 }
 
 // page not found route
